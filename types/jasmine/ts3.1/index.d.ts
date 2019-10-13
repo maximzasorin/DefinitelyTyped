@@ -329,7 +329,7 @@ declare namespace jasmine {
         negativeCompare?(actual: any, ...expected: any[]): CustomMatcherResult;
     }
 
-    type CustomMatcherFactory = (util: MatchersUtil, customEqualityTesters: CustomEqualityTester[]) => CustomMatcher;
+    type CustomMatcherFactory = (util: MatchersUtil, customEqualityTesters: ReadonlyArray<CustomEqualityTester>) => CustomMatcher;
 
     interface CustomMatcherFactories {
         [index: string]: CustomMatcherFactory;
@@ -341,8 +341,8 @@ declare namespace jasmine {
     }
 
     interface MatchersUtil {
-        equals(a: any, b: any, customTesters?: CustomEqualityTester[]): boolean;
-        contains<T>(haystack: ArrayLike<T> | string, needle: any, customTesters?: CustomEqualityTester[]): boolean;
+        equals(a: any, b: any, customTesters?: ReadonlyArray<CustomEqualityTester>): boolean;
+        contains<T>(haystack: ArrayLike<T> | string, needle: any, customTesters?: ReadonlyArray<CustomEqualityTester>): boolean;
         buildFailureMessage(matcherName: string, isNot: boolean, actual: any, ...expected: any[]): string;
     }
 
@@ -617,9 +617,6 @@ declare namespace jasmine {
     type MatchableArgs<Fn> = Fn extends (...args: infer P) => any ? { [K in keyof P]: P[K] | AsymmetricMatcher<any> } : never;
 
     interface FunctionMatchers<Fn extends Func> extends Matchers<any> {
-        toHaveBeenCalled(): boolean;
-        toHaveBeenCalledBefore(expected: Func): boolean;
-        toHaveBeenCalledTimes(expected: number): boolean;
         toHaveBeenCalledWith(...params: MatchableArgs<Fn>): boolean;
 
         /**
@@ -828,7 +825,7 @@ declare namespace jasmine {
 
         and: SpyAnd<Fn>;
         calls: Calls<Fn>;
-        withArgs(...args: Parameters<Fn>): Spy<Fn>;
+        withArgs(...args: MatchableArgs<Fn>): Spy<Fn>;
     }
 
     type SpyObj<T> = T & {

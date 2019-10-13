@@ -31,93 +31,131 @@
 //                 Chris Zieba <https://github.com/ChrisZieba>
 //                 Jeffery Grajkowski <https://github.com/pushplay>
 //                 Claus Stilborg <https://github.com/stilborg>
+//                 Jorgen Vik <https://github.com/jvik>
+//                 Richard Ward <https://github.com/richardwardza>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 2.8
 
 /// <reference types="node" />
 
+import { Agent } from 'http';
+
+interface RequestEvent {
+  api_version: string;
+  account?: string;
+  idempotency_key?: string;
+  method: string;
+  path: string;
+  request_start_time: number;
+}
+
+interface ResponseEvent {
+  api_version: string;
+  account?: string;
+  idempotency_key?: string;
+  method: string;
+  path: string;
+  status: number;
+  request_id: string;
+  elapsed: number;
+  request_start_time: number;
+  request_end_time: number;
+}
+
 declare class Stripe {
-    DEFAULT_HOST: string;
-    DEFAULT_PORT: string;
-    DEFAULT_BASE_PATH: string;
-    DEFAULT_API_VERSION: string;
-    DEFAULT_TIMEOUT: number;
-    PACKAGE_VERSION: string;
-    USER_AGENT: {
-        bindings_version: string;
-        lang: string;
-        lang_version: string;
-        platform: string;
-        publisher: string;
-        uname: string;
-    };
-    USER_AGENT_SERIALIZED: string;
+  DEFAULT_HOST: string;
+  DEFAULT_PORT: string;
+  DEFAULT_BASE_PATH: string;
+  DEFAULT_API_VERSION: string;
+  DEFAULT_TIMEOUT: number;
+  PACKAGE_VERSION: string;
+  USER_AGENT: {
+    bindings_version: string;
+    lang: string;
+    lang_version: string;
+    platform: string;
+    publisher: string;
+    uname: string;
+  };
+  USER_AGENT_SERIALIZED: string;
 
-    resources: typeof Stripe.resources;
-    StripeResource: typeof Stripe.StripeResource;
+  resources: typeof Stripe.resources;
+  StripeResource: typeof Stripe.StripeResource;
 
-    constructor(apiKey: string, version?: string);
+  constructor(apiKey: string, version?: string);
 
-    accounts: Stripe.resources.Accounts;
-    balance: Stripe.resources.Balance;
-    balanceTransactions: Stripe.resources.BalanceTransaction;
-    charges: Stripe.resources.Charges;
-    checkout: Stripe.resources.Checkout;
-    coupons: Stripe.resources.Coupons;
-    creditNotes: Stripe.resources.CreditNotes;
-    customers: Stripe.resources.Customers;
-    disputes: Stripe.resources.Disputes;
-    events: Stripe.resources.Events;
-    invoices: Stripe.resources.Invoices;
-    invoiceItems: Stripe.resources.InvoiceItems;
-    paymentIntents: Stripe.resources.PaymentIntents;
-    paymentMethods: Stripe.resources.PaymentMethods;
-    payouts: Stripe.resources.Payouts;
-    plans: Stripe.resources.Plans;
-    /**
-     * @deprecated
-     */
-    recipientCards: Stripe.resources.RecipientCards;
-    /**
-     * @deprecated
-     */
-    recipients: Stripe.resources.Recipients;
-    subscriptions: Stripe.resources.Subscriptions;
-    subscriptionItems: Stripe.resources.SubscriptionItems;
-    tokens: Stripe.resources.Tokens;
-    transfers: Stripe.resources.Transfers;
-    applicationFees: Stripe.resources.ApplicationFees;
-    fileUploads: Stripe.resources.FileUploads;
-    bitcoinReceivers: Stripe.resources.BitcoinReceivers;
-    refunds: Stripe.resources.Refunds;
-    countrySpecs: Stripe.resources.CountrySpecs;
-    orders: Stripe.resources.Orders;
-    products: Stripe.resources.Products;
-    setupIntents: Stripe.resources.SetupIntents;
-    skus: Stripe.resources.SKUs;
-    webhooks: Stripe.resources.WebHooks;
-    ephemeralKeys: Stripe.resources.EphemeralKeys;
-    usageRecords: Stripe.resources.UsageRecords;
-    usageRecordSummaries: Stripe.resources.UsageRecordSummaries;
-    sources: Stripe.resources.Sources;
+  accounts: Stripe.resources.Accounts;
+  balance: Stripe.resources.Balance;
+  balanceTransactions: Stripe.resources.BalanceTransaction;
+  charges: Stripe.resources.Charges;
+  checkout: Stripe.resources.Checkout;
+  coupons: Stripe.resources.Coupons;
+  creditNotes: Stripe.resources.CreditNotes;
+  customers: Stripe.resources.Customers;
+  disputes: Stripe.resources.Disputes;
+  events: Stripe.resources.Events;
+  invoices: Stripe.resources.Invoices;
+  invoiceItems: Stripe.resources.InvoiceItems;
+  paymentIntents: Stripe.resources.PaymentIntents;
+  paymentMethods: Stripe.resources.PaymentMethods;
+  payouts: Stripe.resources.Payouts;
+  plans: Stripe.resources.Plans;
+  /**
+   * @deprecated
+   */
+  recipientCards: Stripe.resources.RecipientCards;
+  /**
+   * @deprecated
+   */
+  recipients: Stripe.resources.Recipients;
+  subscriptions: Stripe.resources.Subscriptions;
+  subscriptionItems: Stripe.resources.SubscriptionItems;
+  tokens: Stripe.resources.Tokens;
+  transfers: Stripe.resources.Transfers;
+  applicationFees: Stripe.resources.ApplicationFees;
+  fileUploads: Stripe.resources.FileUploads;
+  bitcoinReceivers: Stripe.resources.BitcoinReceivers;
+  refunds: Stripe.resources.Refunds;
+  countrySpecs: Stripe.resources.CountrySpecs;
+  orders: Stripe.resources.Orders;
+  products: Stripe.resources.Products;
+  setupIntents: Stripe.resources.SetupIntents;
+  skus: Stripe.resources.SKUs;
+  webhooks: Stripe.resources.WebHooks;
+  ephemeralKeys: Stripe.resources.EphemeralKeys;
+  usageRecords: Stripe.resources.UsageRecords;
+  usageRecordSummaries: Stripe.resources.UsageRecordSummaries;
+  sources: Stripe.resources.Sources;
 
-    setHost(host: string): void;
-    setHost(host: string, port: string | number): void;
-    setHost(host: string, port: string | number, protocol: string): void;
+  setHost(host: string): void;
+  setHost(host: string, port: string | number): void;
+  setHost(host: string, port: string | number, protocol: string): void;
 
-    setProtocol(protocol: string): void;
-    setPort(port: string | number): void;
-    setApiVersion(version?: string): void;
-    setApiKey(key?: string): void;
-    setAppInfo(info?: { partner_id?: string; name: string; url?: string; version?: string }): void;
-    setTimeout(timeout?: number): void;
-    setMaxNetworkRetries(maxNetworkRetries: number): void;
-    setTelemetryEnabled(enabled: boolean): void;
-    setHttpAgent(agent: string): void;
-    getConstant(c: string): any;
-    getMaxNetworkRetries(): number;
-    getTelemetryEnabled(): boolean;
-    getClientUserAgent(response: (userAgent: string) => void): void;
+  setProtocol(protocol: string): void;
+  setPort(port: string | number): void;
+  setApiVersion(version?: string): void;
+  setApiKey(key?: string): void;
+  setAppInfo(info?: {
+    partner_id?: string;
+    name: string;
+    url?: string;
+    version?: string;
+  }): void;
+  setTimeout(timeout?: number): void;
+  setMaxNetworkRetries(maxNetworkRetries: number): void;
+  setTelemetryEnabled(enabled: boolean): void;
+  setHttpAgent(agent: Agent): void;
+  getConstant(c: string): any;
+  getMaxNetworkRetries(): number;
+  getTelemetryEnabled(): boolean;
+  getClientUserAgent(response: (userAgent: string) => void): void;
+
+  on(event: 'request', handler: (event: RequestEvent) => void): void;
+  on(event: 'response', handler: (event: ResponseEvent) => void): void;
+  once(event: 'request', handler: (event: RequestEvent) => void): void;
+  once(event: 'response', handler: (event: ResponseEvent) => void): void;
+  off(event: 'request', handler: (event: RequestEvent) => void): void;
+  off(event: 'response', handler: (event: ResponseEvent) => void): void;
 }
 export = Stripe;
 
@@ -138,7 +176,31 @@ declare namespace Stripe {
             /**
              * Value is "account"
              */
-            object: string;
+            object: 'account';
+
+            /**
+             * A hash containing the set of capabilities that was requested for this
+             * account and their associatedstates. Keys are names of capabilities.
+             * You can see the full list here. Values may be active, inactive, or pending.
+             */
+            capabilities?: {
+                /**
+                 * The status of the card payments capability of the account, or whether
+                 * the account can directly process credit and debit card charges.
+                 */
+                card_payments?: 'active' | 'inactive' | 'pending';
+
+                /**
+                 * he status of the legacy payments capability of the account.
+                 */
+                legacy_payments?: 'active' | 'inactive' | 'pending';
+
+                /**
+                 * The status of the transfers capability of the account, or whether your
+                 * platform can transfer funds to the account.
+                 */
+                transfers?: 'active' | 'inactive' | 'pending';
+            };
 
             /**
              * Whether or not the account can create live charges
@@ -146,9 +208,20 @@ declare namespace Stripe {
             charges_enabled: boolean;
 
             /**
+             * Information about the company or business.
+             * This field is null unless business_type is set to company.
+             */
+            company?: ICompany;
+
+            /**
              * The country of the account
              */
             country: string;
+
+            /**
+             * Time at which the object was created. Measured in seconds since the Unix epoch.
+             */
+            created?: number;
 
             /**
              * Whether or not account details have been submitted yet. Standalone
@@ -163,6 +236,24 @@ declare namespace Stripe {
             display_name: string;
 
             /**
+             * External accounts (bank accounts and debit cards) currently
+             * attached to this account
+             */
+            external_accounts?: IList<IExternalAccount>;
+
+            /**
+             * Information about the person represented by the account.
+             * This field is null unless business_type is set to individual.
+             */
+            individual?: IIndividual;
+
+            /**
+             * Set of key-value pairs that you can attach to an object. This can be useful
+             * for storing additional information about the object in a structured format.
+             */
+            metadata?: IMetadata;
+
+            /**
              * Whether or not Stripe will send automatic transfers for this account. This
              * is only false when Stripe is waiting for additional information from the
              * account holder.
@@ -170,10 +261,22 @@ declare namespace Stripe {
             payouts_enabled: boolean;
 
             /**
+             * Information about the requirements for the account, including what information
+             * needs to be collected, and by when.
+             */
+            requirements?: IAccountRequirements;
+
+            /**
+             * The Stripe account type. Can be standard, express, or custom.
+             */
+            type: 'standard' | 'express' | 'custom';
+
+            /**
              * The state of the account’s information requests, including what
              * information is needed and by when it must be provided.
+             * @deprecated
              */
-            verification: {
+            verification?: {
                 /**
                  * A string describing the reason for this account being unable to charge
                  * and/or transfer, if that is the case. Possible values are "rejected.fraud",
@@ -198,24 +301,6 @@ declare namespace Stripe {
                  */
                 fields_needed: string[];
             };
-
-            /**
-             * Information about the company or business.
-             * This field is null unless business_type is set to company.
-             */
-            company?: ICompany;
-
-            /**
-             * Information about the person represented by the account.
-             * This field is null unless business_type is set to individual.
-             */
-            individual?: IIndividual;
-
-            /**
-             * External accounts (bank accounts and debit cards) currently
-             * attached to this account
-             */
-            external_accounts?: IList<IExternalAccount>;
         }
 
         interface IAccountCreationOptions extends IAccountUpdateOptions {
@@ -240,14 +325,10 @@ declare namespace Stripe {
             email?: string;
 
             /**
-             * Whether you'd like to create a Custom or Standard account. Custom
-             * accounts have extra parameters available to them, and require that you,
-             * the platform, handle all communication with the account holder.
-             * Standard accounts are normal Stripe accounts: Stripe will email the
-             * account holder to setup a username and password, and handle all account
-             * management directly with them. Possible values are custom and standard.
+             * The type of Stripe account to create. Currently must be custom, as only Custom
+             * accounts may be created via the API.
              */
-            type: 'custom' | 'standard';
+            type: 'custom';
 
             /**
              * Information about the company or business.
@@ -260,6 +341,39 @@ declare namespace Stripe {
              * This field is null unless business_type is set to individual.
              */
             individual?: IIndividualCreateUpdateOptions;
+        }
+
+        interface IAccountRequirements {
+            /**
+             * The date the fields in currently_due must be collected by to keep payouts enabled for the account.
+             * These fields might block payouts sooner if the next threshold is reached before these fields are collected.
+             */
+            current_deadline: number | null;
+
+            /**
+             * The fields that need to be collected to keep the account enabled. If not collected by the current_deadline, these fields appear in past_due as well, and the account is disabled.
+             */
+            currently_due?: string[];
+
+            /**
+             * If the account is disabled, this string describes why the account can’t create charges or receive payouts. Can be requirements.past_due, requirements.pending_verification, rejected.fraud, rejected.terms_of_service, rejected.listed, rejected.other, listed, under_review, or other.
+             */
+            disabled_reason?: string | null;
+
+            /**
+             * The fields that need to be collected assuming all volume thresholds are reached. As they become required, these fields appear in currently_due as well, and the current_deadline is set.
+             */
+            eventually_due?: string[];
+
+            /**
+             * The fields that weren’t collected by the current_deadline. These fields need to be collected to re-enable the account.
+             */
+            past_due?: string[];
+
+            /**
+             * Fields that may become required depending on the results of verification or review. An empty array unless an asynchronous verification is pending. If verification fails, the fields in this array become required and move to currently_due or past_due.
+             */
+            pending_verification?: string[];
         }
 
         interface IAccountShared {
@@ -361,18 +475,19 @@ declare namespace Stripe {
             email?: string;
 
             /**
-             * A set of key/value pairs that you can attach to an account object. It can be
-             * useful for storing additional information about the account in a structured
-             * format. This can be unset by updating the value to null and then saving.
-             */
-            metadata?: IMetadata;
-
-            /**
              * Internal-only description of the product being sold or service being
              * provided by this account. It’s used by Stripe for risk and underwriting
              * purposes.
              */
             product_description?: string;
+
+            /**
+             * The set of capabilities you want to unlock for this account (US only).
+             * Each capability will be inactive until you have provided its specific
+             * requirements and Stripe has verified them. An account may have some of
+             * its requested capabilities be active and some be inactive.
+             */
+            requested_capabilities?: string[];
 
             /**
              * Account options for customizing how the account functions within Stripe.
@@ -463,6 +578,18 @@ declare namespace Stripe {
                      * charge.
                      */
                     statement_descriptor?: string;
+
+                    /**
+                     * The Kana variation of the default text that appears on credit card statements
+                     * when a charge is made (Japan only)
+                     */
+                    statement_descriptor_kana?: string | null;
+
+                    /**
+                     * The Kanji variation of the default text that appears on credit card statements
+                     * when a charge is made (Japan only)
+                     */
+                    statement_descriptor_kanji?: string | null;
                 };
 
                 /**
@@ -549,7 +676,18 @@ declare namespace Stripe {
             };
         }
 
-        interface IAccountUpdateOptions extends IDataOptions, IAccountShared {
+        interface IAccountUpdateOptions extends IDataOptionsWithMetadata, IAccountShared {
+            /**
+             * An account token, used to securely provide details to the account.
+             */
+            account_token?: string;
+
+            /**
+             * Information about the company or business.
+             * This field is null unless business_type is set to company.
+             */
+            company?: ICompanyCreateUpdateOptions;
+
             /**
              * A card or bank account to attach to the account. You can provide either a
              * token, like the ones returned by Stripe.js, or a dictionary as documented in
@@ -606,17 +744,6 @@ declare namespace Stripe {
                  */
                 routing_number?: string;
             };
-
-            /**
-             * An account token, used to securely provide details to the account.
-             */
-            account_token?: string;
-
-            /**
-             * Information about the company or business.
-             * This field is null unless business_type is set to company.
-             */
-            company?: ICompanyCreateUpdateOptions;
 
             /**
              * Information about the person represented by the account.
@@ -2113,6 +2240,11 @@ declare namespace Stripe {
                 payment_method_types?: string[];
 
                 /**
+                 * The ID of the SetupIntent for Checkout Sessions in setup mode.
+                 */
+                setup_intent?: string | null;
+
+                /**
                  * ID of subscription if one was created [Expandable]
                  */
                 subscription?: string | subscriptions.ISubscription;
@@ -3360,6 +3492,16 @@ declare namespace Stripe {
             object: 'invoice';
 
             /**
+             * The country of the business associated with this invoice, most often the business creating the invoice.
+             */
+            account_country: string;
+
+            /**
+             * The public name of the business associated with this invoice, most often the business creating the invoice.
+             */
+            account_name: string;
+
+            /**
              * Final amount due at this time for this invoice. If the invoice's total is smaller than the minimum charge
              * amount, for example, or if there is account credit that can be applied to the invoice, the amount_due may
              * be 0. If there is a positive starting_balance for the invoice (the customer owes money), the amount_due
@@ -3422,6 +3564,8 @@ declare namespace Stripe {
              * Stripe will attempt to pay this invoice using the default source attached to the
              * customer. When sending an invoice, Stripe will email this invoice to the customer
              * with payment instructions.
+             *
+             * @deprecated This field has been renamed to collection_method and will be removed in a future API version.
              */
             billing: 'charge_automatically' | 'send_invoice';
 
@@ -3452,10 +3596,10 @@ declare namespace Stripe {
             charge: string | charges.ICharge | null;
 
             /**
-             * Whether or not the invoice is still trying to collect payment. An invoice is closed if it's either paid or
+             * @deprecated Whether or not the invoice is still trying to collect payment. An invoice is closed if it's either paid or
              * it has been marked closed. A closed invoice will no longer attempt to collect payment.
              */
-            closed: boolean;
+            closed?: boolean;
 
             /**
              * Either charge_automatically, or send_invoice. When charging automatically, Stripe will attempt to pay
@@ -3482,6 +3626,12 @@ declare namespace Stripe {
             customer: string | customers.ICustomer;
 
             /**
+             * The customer’s address. Until the invoice is finalized, this field will equal customer.address.
+             * Once the invoice is finalized, this field will no longer be updated.
+             */
+            customer_address: IAddress | null;
+
+            /**
              * The customer’s email. Until the invoice is finalized, this field will equal customer.email.
              * Once the invoice is finalized, this field will no longer be updated.
              */
@@ -3500,9 +3650,34 @@ declare namespace Stripe {
             customer_phone: string;
 
             /**
-             * Time at which the object was created. Measured in seconds since the Unix epoch.
+             * The customer’s shipping information. Until the invoice is finalized, this field will equal customer.shipping.
+             * Once the invoice is finalized, this field will no longer be updated.
              */
-            date: number;
+            customer_shipping: IShippingInformation;
+
+            /**
+             * The customer’s tax exempt status. Until the invoice is finalized, this field will equal customer.tax_exempt.
+             * Once the invoice is finalized, this field will no longer be updated.
+             */
+            customer_tax_exempt: string;
+
+            /**
+             * The customer’s tax IDs. Until the invoice is finalized, this field will contain the same tax IDs as customer.tax_ids.
+             * Once the invoice is finalized, this field will no longer be updated.
+             */
+            customer_tax_ids: customerTaxIds.ITaxIdCreationOptions[];
+
+            /**
+             * @deprecated Time at which the object was created. Measured in seconds since the Unix epoch.
+             */
+            date?: number;
+
+            /**
+             * ID of the default payment method for the invoice. It must belong to the customer associated with the invoice.
+             * If not set, defaults to the subscription’s default payment method, if any, or to the default payment method in
+             * the customer’s invoice settings.
+             */
+            default_payment_method: string;
 
             /**
              * ID of the default payment source for the invoice. It must belong to the customer
@@ -3510,6 +3685,11 @@ declare namespace Stripe {
              * the subscription’s default source, if any, or to the customer’s default source.
              */
             default_source: string;
+
+            /**
+             * The tax rates applied to this invoice, if any.
+             */
+            default_tax_rates: taxRates.ITaxRate[];
 
             /**
              * An arbitrary string attached to the object. Often useful for displaying to users.
@@ -3532,16 +3712,16 @@ declare namespace Stripe {
             ending_balance: number | null;
 
             /**
-             * Whether or not the invoice has been forgiven. Forgiving an invoice instructs us to update the subscription
-             * status as if the invoice were succcessfully paid. Once an invoice has been forgiven, it cannot be unforgiven
-             * or reopened
-             */
-            forgiven: boolean;
-
-            /**
              * Footer displayed on the invoice.
              */
             footer: string;
+
+            /**
+             * @deprecated Whether or not the invoice has been forgiven. Forgiving an invoice instructs us to update the subscription
+             * status as if the invoice were succcessfully paid. Once an invoice has been forgiven, it cannot be unforgiven
+             * or reopened
+             */
+            forgiven?: boolean;
 
             /**
              * The URL for the hosted invoice page, which allows customers to view and pay an
@@ -3644,7 +3824,7 @@ declare namespace Stripe {
             /**
              * The subscription that this invoice was prepared for, if any.
              */
-            subscription: string | subscriptions.ISubscription;
+            subscription: string | subscriptions.ISubscription | null;
 
             /**
              * Only set for upcoming invoices that preview prorations. The time used to calculate prorations.
@@ -3679,6 +3859,26 @@ declare namespace Stripe {
              * Total after discount
              */
             total: number;
+
+            /**
+             * The aggregate amounts calculated per tax rate for all line items.
+             */
+            total_tax_amounts: {
+              /**
+               * The amount, in pence, of the tax.
+               */
+              amount: number;
+
+              /**
+               * Whether this tax amount is inclusive or exclusive.
+               */
+              inclusive: boolean;
+
+              /**
+               * The tax rate that was applied to get this tax amount.
+               */
+              tax_rate: string;
+            };
 
             /**
              * The time at which webhooks for this invoice were successfully delivered (if the invoice had no webhooks to
@@ -3781,12 +3981,17 @@ declare namespace Stripe {
             auto_advance?: boolean;
 
             /**
+             * @deprecated Use collection_method instead
+             */
+            billing?: 'charge_automatically' | 'send_invoice';
+
+            /**
              * Either `charge_automatically`, or `send_invoice`. When charging automatically, Stripe
              * will attempt to pay this invoice using the default source attached to the customer.
              * When sending an invoice, Stripe will email this invoice to the customer with payment
              * instructions. Defaults to charge_automatically.
              */
-            billing?: 'charge_automatically' | 'send_invoice';
+            collection_method?: 'charge_automatically' | 'send_invoice';
 
             /**
              * A list of up to 4 custom fields to be displayed on the invoice.
@@ -4296,7 +4501,7 @@ declare namespace Stripe {
 
             amount: number;
             currency: string;
-            customer: string;
+            customer: string | customers.ICustomer;
             date: number;
             description: string;
 
@@ -5912,6 +6117,62 @@ declare namespace Stripe {
         }
     }
 
+    namespace taxRates {
+        /**
+         * Tax rates can be applied to invoices and subscriptions to collect tax.
+         */
+        interface ITaxRate extends IResourceObject {
+             /**
+              * String representing the object’s type. Objects of the same type share the same value.
+              */
+             object: 'tax_rate';
+
+             /**
+              * Defaults to true. When set to false, this tax rate cannot be applied to objects in the API, but will still be applied to subscriptions and invoices that already have it set.
+              */
+             active: boolean;
+
+             /**
+              * Time at which the object was created. Measured in seconds since the Unix epoch.
+              */
+             created: number;
+
+             /**
+              * An arbitrary string attached to the tax rate for your internal use only. It will not be visible to your customers.
+              */
+             description: string;
+
+             /**
+              * The display name of the tax rates as it will appear to your customer on their receipt email, PDF, and the hosted invoice page.
+              */
+             display_name: string;
+
+             /**
+              * This specifies if the tax rate is inclusive or exclusive.
+              */
+             inclusive: boolean;
+
+             /**
+              * The jurisdiction for the tax rate.
+              */
+             jurisdiction: string;
+
+             /**
+              * Has the value true if the object exists in live mode or the value false if the object exists in test mode.
+              */
+             livemode: boolean;
+
+             /**
+              * Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+              */
+             metadata: IMetadata;
+
+             /**
+              * This represents the tax rate percent out of 100.
+              */
+             percentage: number | null;
+          }
+    }
     namespace paymentMethods {
         interface WalletAddress {
             /** City/District/Suburb/Town/Village. */
@@ -7162,6 +7423,12 @@ declare namespace Stripe {
              * becomes available. See the Connect documentation for details.
              */
             source_transaction?: string;
+
+            /**
+             * The source balance to use for this transfer. One of bank_account
+             * or card. For most users, this will default to card.
+             */
+            source_type?: SourceTypes;
 
             /**
              * A string that identifies this transaction as part of a group.

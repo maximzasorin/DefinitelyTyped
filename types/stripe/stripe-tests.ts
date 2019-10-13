@@ -3,6 +3,12 @@ import { customers } from 'stripe';
 
 const stripe = new Stripe('sk_test_BF573NobVn98OiIsPAv7A04K');
 
+import { Agent as HttpAgent } from 'http';
+import { Agent as HttpsAgent } from 'https';
+
+stripe.setHttpAgent(new HttpAgent());
+stripe.setHttpAgent(new HttpsAgent());
+
 stripe.setApiVersion('2019-05-16');
 
 stripe.setAppInfo(); // $ExpectType void
@@ -13,6 +19,13 @@ stripe.setAppInfo({
 
 stripe.setTelemetryEnabled(true); // $ExpectType void
 stripe.getTelemetryEnabled(); // $ExpectType boolean
+
+stripe.on('request', event => {});
+stripe.on('response', event => {});
+stripe.once('request', event => {});
+stripe.once('response', event => {});
+stripe.off('request', event => {});
+stripe.off('response', event => {});
 
 // generic list tests
 // ##################################################################################
@@ -982,6 +995,19 @@ stripe.customers.listTaxIds('cus_FhdWgak8aeNfht', (err, taxIds) => {
 //#region Transfers tests
 // ##################################################################################
 
+stripe.transfers.create(
+    { amount: 100, currency: 'USD', destination: 'acct_17wV8KBoqMA9o2xk', source_type: 'bank_account' },
+    (err, reversal) => {
+        // asynchronously called
+    },
+);
+
+stripe.transfers
+    .create({ amount: 100, currency: 'USD', destination: 'acct_17wV8KBoqMA9o2xk', source_type: 'bank_account' })
+    .then(reversal => {
+        // asynchronously called
+    });
+
 //#endregion
 
 //#region Transfers Reversals tests
@@ -1000,20 +1026,16 @@ stripe.transfers.createReversal('tr_17F2JBFuhr4V1legrq97JrFE').then(reversal => 
 //#region Accounts test
 // ##################################################################################
 
-stripe.accounts.create(
-    {
-        email: '',
-        type: 'standard',
-    },
-    (err, customer) => {
-        // asynchronously called
-    },
-);
 stripe.accounts
     .create({
         type: 'custom',
-    })
-    .then(customer => {
+        country: 'US',
+        email: 'bob@example.com',
+        requested_capabilities: [
+            'card_payments',
+            'transfers'
+        ]
+    }, (err, account) => {
         // asynchronously called
     });
 stripe.accounts

@@ -497,6 +497,9 @@ _.chain([1, 2, 3, 4]).unshift(5, 6); // $ExpectType CollectionChain<number>
     _.flattenDeep([1, [2, [3, [4, 5]]]]); // $ExpectType number[]
     _.flattenDeep({0: 1, 1: [2, [3, [4, 5]]], length: 2}); // $ExpectType number[]
 
+    _.flattenDeep(['x']); // $ExpectType string[]
+    _.flattenDeep(['x', ['y']]); // $ExpectType string[]
+
     _.flattenDeep<number>([1, 2, 3]); // $ExpectType number[]
     _.flattenDeep<number>([[1, 2, 3]]); // $ExpectType number[]
     _.flattenDeep<number>([1, [2, [3, [4, 5]]]]); // $ExpectType number[]
@@ -3549,6 +3552,8 @@ fp.now(); // $ExpectType number
     _(fnWithRestParameters).negate(); // $ExpectType Function<(...args: number[]) => boolean>
     _.chain(fnWithRestParameters).negate(); // $ExpectType FunctionChain<(...args: number[]) => boolean>
     fp.negate(fnWithRestParameters); // $ExpectType (...args: number[]) => boolean
+
+    _.negate(() => 'foo'); // $ExpectError
 
     _.negate((a1: number, a2: number): boolean => true); // $ExpectType (a1: number, a2: number) => boolean
     _((a1: number, a2: number): boolean => true).negate(); // $ExpectType Function<(a1: number, a2: number) => boolean>
